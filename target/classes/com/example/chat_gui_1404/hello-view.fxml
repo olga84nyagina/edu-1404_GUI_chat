@@ -8,10 +8,10 @@
       <TextArea editable="false" prefHeight="350.0" prefWidth="200.0" fx:id="textArea"/>
       <HBox prefHeight="25.0" prefWidth="200.0">
          <children>
-            <TextField prefWidth="225.0" fx:id="textField" />
-            <Button onAction="#handlerSend" mnemonicParsing="false" prefWidth="75.0" text="Отправить" />
+            <TextField onAction="#handlerSend" prefWidth="225.0" fx:id="textField" />
+            <Button fx:id="sendBtn" disable="true" onAction="#handlerSend" mnemonicParsing="false" prefWidth="75.0" text="Отправить" />
          </children>
       </HBox>
-      <Button  mnemonicParsing="false" prefWidth="300.0" text="Подключиться" />
+      <Button onAction="#connect" fx:id="connectBtn" mnemonicParsing="false" prefWidth="300.0" text="Подключиться" />
    </children>
 </VBox>

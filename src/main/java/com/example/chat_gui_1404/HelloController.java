@@ -12,64 +12,60 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-public class HelloController {
-    static ArrayList<String> usersName = new ArrayList<>();
+public class HelloController {//подключение к элементам в окне
+    static ArrayList<String> usersName = new ArrayList<>();//список пользователей
+    DataOutputStream out;
     @FXML
-    TextField textField;
+    TextField textField;// поле текста
    @FXML
-    TextArea textArea;
+    TextArea textArea;//область текста
    @FXML
-    Button connectBtn;
+    Button connectBtn;//кнопка соединения
    @FXML
-   Button sendBtn;
+   Button sendBtn;//  кнопка ссылки
    @FXML
-    public void handlerSend(){
-       String text = textField.getText();
-       textArea.appendText(text+"\n");
-       textField.clear();
-       textField.requestFocus();
-       try {
-           out.writeUTF(text);
-           catch(IOException e){
-               e.printStackTrace();
-           }
+    public void handlerSend() {//отправление сообщения
+       String text = textField.getText();//функция ввода поле текста
+       textArea.appendText(text + "\n");//добавление переноса строки
+       textField.clear();// очистить текст
+       textField.requestFocus();//фокусировка курсора
+       try {//исключение ошибок при подключении
+           out.writeUTF(text); // отправка на сервер
+       } catch (IOException e) {
+           e.printStackTrace();
        }
+   }
     @FXML
-    public void connect(){
+    public void connect(){//кнопка подключиться
     try {
-        Socket socket = new Socket("localhost", 8179);
-        ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-        DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+        Socket socket = new Socket("localhost", 8179);//подключение к серверному сокету
+        ObjectInputStream in = new ObjectInputStream(socket.getInputStream());//поток ввода обьекта
+        out = new DataOutputStream(socket.getOutputStream());//поток вывода данных
 
-        Thread thread = new Thread(new Runnable() {
+        Thread thread = new Thread(new Runnable() {//новый поток
             @Override
             public void run() {
-                try {
-                    while (true){
+                try {//исключение ошибки потери соединения
+                    while (true){//проверка условия
                         Object object = in.readObject();
-                        if(object.getClass().equals(usersName.getClass())){
+                        if(object.getClass().equals(usersName.getClass())){//список пользователей
                             usersName = (ArrayList<String>) object;
-                            textArea.appendText(usersName.toString()+"\n");
+                            textArea.appendText(usersName.toString()+"\n");//
                         }else{
                             String response = (String) object;
                             textArea.appendText(response+"\n");
                         }
                     }
-                }catch (Exception exception){
+                }catch (Exception exception){//исключение ошибок
                     System.out.println("Потеряно соединение с сервером");
                 }
             }
         });
         thread.start();
-        sendBtn.setDisable(false);
-connectBtn.setDisable(true);
-        while (true){
-            String request = scanner.nextLine();
-            out.writeUTF(request);
-        }
-    } catch (IOException e){
+        sendBtn.setDisable(false);//заблокировать кнопку
+        connectBtn.setDisable(true);
+    } catch (IOException e){//исключение ошибок
         e.printStackTrace();
 }
     }
